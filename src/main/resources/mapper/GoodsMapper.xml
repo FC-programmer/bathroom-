@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuchen.travel.background.mapper.GoodsMapper">
+
+    <!--查询商品总数-->
+    <select id="selectGoodsCount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM goods
+    </select>
+    <!--分页查询全部商品-->
+    <select id="selectGoods" resultType="com.fuchen.travel.background.entity.Goods">
+        SELECT g.*, c.name goodsType
+        FROM goods g
+        LEFT JOIN classify c ON g.goodsId = c. id
+        LIMIT #{offset}, #{limit};
+    </select>
+
+    <insert id="insertGoods">
+        INSERT INTO
+            goods(goodsId, cover, name, price)
+        values (#{goodsId}, #{cover},#{name}, #{price});
+
+    </insert>
+
+    <delete id="deleteGoodsById">
+        delete from goods
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectGoodsCountSearch" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM goods
+        where name like  concat('%',#{keyword,jdbcType=VARCHAR},'%')
+    </select>
+
+    <select id="getScenicSearch" resultType="com.fuchen.travel.background.entity.Goods">
+        SELECT g.*, c.name goodsType
+        FROM goods g
+        LEFT JOIN classify c ON g.goodsId = c. id
+        WHERE g.name like  concat('%',#{keyword,jdbcType=VARCHAR},'%')
+        LIMIT #{offset}, #{limit};
+    </select>
+
+    <select id="getOrderCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM orderdetails
+    </select>
+
+    <select id="getGoodsOrder" resultType="com.fuchen.travel.background.entity.GoodsOrder">
+        SELECT
+        o.*,
+        case when c.content = '1' then '已付款' WHEN c.content = '2' THEN '已取消' ELSE null end content
+        FROM orderdetails o
+        LEFT JOIN CommodityOrder c ON o.orderId = c.id
+        LIMIT #{offset}, #{limit};
+    </select>
+
+</mapper>

@@ -243,25 +243,25 @@
           <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">浴室类型管理</h4>
-                <div class="input-group">
-                  <button type="button" class="btn btn-inverse-success btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#addScenicModal">
-                    <i class="mdi mdi-plus text-muted"></i>
-                  </button>
-                  <button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteScenicModal">
-                    <i class="mdi mdi-delete-forever text-muted"></i>
-                  </button>
-                  <form class="forms-sample" method="get"  th:action="@{/scenic/search}">
-                    <div class="input-group-prepend" style="width: 400px">
-                      <div class="input-group" id="search1">
-                        <i class="mdi mdi-magnify input-group-text" style="height: 40px;"></i>
-                        <input type="text" th:class="|form-control form-control-sm ${searchMsg!=null?'is-invalid':''}|" name="keyword" placeholder="请输入关键字">
-                        <button type="submit" class="btn btn-primary">搜索</button>
-                      </div>
-                    </div>
-                  </form>
+                <h4 class="card-title">商品订单列表</h4>
+                <!--<div class="input-group">-->
+                <!--  <button type="button" class="btn btn-inverse-success btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#addGoodsModal">-->
+                <!--    <i class="mdi mdi-plus text-muted"></i>-->
+                <!--  </button>-->
+                <!--  <button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteGoodsModal">-->
+                <!--    <i class="mdi mdi-delete-forever text-muted"></i>-->
+                <!--  </button>-->
+                <!--  <form class="forms-sample" method="get"  th:action="@{/goods/search}">-->
+                <!--    <div class="input-group-prepend" style="width: 400px">-->
+                <!--      <div class="input-group" id="search1">-->
+                <!--        <i class="mdi mdi-magnify input-group-text" style="height: 40px;"></i>-->
+                <!--        <input type="text" th:class="|form-control form-control-sm ${searchMsg!=null?'is-invalid':''}|" name="keyword" placeholder="请输入关键字">-->
+                <!--        <button type="submit" class="btn btn-primary">搜索</button>-->
+                <!--      </div>-->
+                <!--    </div>-->
+                <!--  </form>-->
 
-                </div>
+                <!--</div>-->
 
                 <div class="table-responsive pt-3" style="margin-bottom: 25px">
                   <table class="table table-bordered text-center">
@@ -278,32 +278,44 @@
                         id
                       </th>
                       <th>
-                        浴室名称
+                        手机号
+                      </th>
+                      <th>
+                        所有商品名称
+                      </th>
+                      <th>
+                        总价
+                      </th>
+                      <th>
+                        商品状态
+                      </th>
+                      <th>
+                        创建时间
                       </th>
 
-                      <th>
-                        图片
-                      </th>
                     </tr>
                     </thead>
                     <tbody id="checklist">
-                    <tr th:each="allScenic:${scenicList}">
+                    <tr th:each="allGoodsOrder:${goodsOrderList}">
                       <th>
                         <div class="form-check" >
                           <label class="form-check-label">
-                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allScenic.scenic.id}">
+                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allGoodsOrder.goodOrder.id}">
                             <!--<input type="hidden" >-->
                           </label>
                         </div>
                       </th>
-                      <td th:text="${allScenic.scenic.id}">
-                        1
+                      <td th:text="${allGoodsOrder.goodOrder.id}">
                       </td>
-                      <td th:text="${allScenic.scenic.scenicName}">
-                        故宫
+                      <td th:text="${allGoodsOrder.goodOrder.phone}">
                       </td>
-                      <td>
-                        <img th:src="${allScenic.scenic.imageUrl}" class="rounded-0 rounded-lg" style="width: 180px;height: 100px">
+                      <td th:text="${allGoodsOrder.goodOrder.everyone}">
+                      </td>
+                      <td th:text="${allGoodsOrder.goodOrder.price}">
+                      </td>
+                      <td th:text="${allGoodsOrder.goodOrder.content}">
+                      </td>
+                      <td th:text="${allGoodsOrder.goodOrder.data}">
                       </td>
                     </tr>
                     </tbody>
@@ -343,69 +355,95 @@
 
 
       <!-- Modal -->
-      <div class="modal fade" id="addScenicModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">添加浴室</h5>
-              <button type="button" class="btn btn-sm btn-close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form class="forms-sample" id="addScenic"  enctype="multipart/form-data" method="post" th:action="@{/addScenic}">
-                <div class="row">
-                  <div class="form-group row col-md-6">
-                    <label for="scenicName" class="col-sm-3 col-form-label">浴室名称：</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" id="scenicName" name="scenicName" placeholder="" required>
-                      <div class="invalid-feedback" id="scenicNameMsg"></div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label>浴室图片：</label>
-                    <input type="file" name="scenicImg" class="file-upload-default" id="scenicImg" required>
-                    <div class="input-group col-xs-12">
-                      <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image" required>
-                      <div class="invalid-feedback" id="scenicImgMsg"></div>
-                      <span class="input-group-append">
-                          <button class="file-upload-browse btn btn-primary" type="button">上传文件</button>
-                        </span>
-                    </div>
-                  </div>
+      <!--<div class="modal fade" id="addGoodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+      <!--  <div class="modal-dialog modal-lg">-->
+      <!--    <div class="modal-content">-->
+      <!--      <div class="modal-header">-->
+      <!--        <h5 class="modal-title" id="exampleModalLabel">添加商品</h5>-->
+      <!--        <button type="button" class="btn btn-sm btn-close" data-dismiss="modal" aria-label="Close">-->
+      <!--          <span aria-hidden="true">&times;</span>-->
+      <!--        </button>-->
+      <!--      </div>-->
+      <!--      <div class="modal-body">-->
+      <!--        <form class="forms-sample" id="addGoods"  enctype="multipart/form-data" method="post" th:action="@{/addGoods}">-->
+      <!--          <div class="row">-->
+      <!--            <div class="form-group row col-md-8">-->
+      <!--              <label for="goodName" class="col-sm-3 col-form-label">商品名称：</label>-->
+      <!--              <div class="col-sm-9">-->
+      <!--                <input type="text" class="form-control" id="goodName" name="goodName" placeholder="" required>-->
+      <!--                <div class="invalid-feedback" id="goodNameMsg"></div>-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--            <div class="form-group">-->
+      <!--              <label class="col-sm-3 col-form-label">商品图片：</label>-->
+      <!--              <input type="file" name="goodImg" class="file-upload-default" id="goodImg" required>-->
+      <!--              <div class="input-group col-xs-8">-->
+      <!--                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image" required>-->
+      <!--                <div class="invalid-feedback" id="goodImgMsg"></div>-->
+      <!--                <span class="input-group-append">-->
+      <!--                    <button class="file-upload-browse btn btn-primary" type="button">上传文件</button>-->
+      <!--                  </span>-->
+      <!--              </div>-->
+      <!--            </div>-->
 
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                  <button type="submit" onclick="addScenic()" class="btn btn-primary">立即保存</button>
-                </div>
-                </div>
-              </form>
-            </div>
+      <!--            <div class="form-group row col-md-8">-->
+      <!--              <label for="goodName" class="col-sm-3 col-form-label">商品价格：</label>-->
+      <!--              <div class="col-sm-9">-->
+      <!--                <input type="text" class="form-control" id="goodPrice" name="goodPrice" placeholder="" required>-->
+      <!--                <div class="invalid-feedback" id="goodPriceMsg"></div>-->
+      <!--              </div>-->
+      <!--            </div>-->
 
-          </div>
-        </div>
-      </div>
+      <!--            <div class="form-group row col-md-8">-->
+      <!--              <label class="col-sm-3 col-form-label">商品类型：</label>-->
+      <!--              <div class="col-sm-9">-->
+      <!--                <select name="goodType" class="form-select" aria-label="Default select example">-->
+      <!--                    <option value="1">毛巾</option>-->
+      <!--                    <option value="2">香皂</option>-->
+      <!--                    <option value="3">沐浴露</option>-->
+      <!--                    <option value="4">洗发露</option>-->
+      <!--                    <option value="5">护发素</option>-->
+      <!--                    <option value="6">刮胡刀</option>-->
+      <!--                    <option value="7">内衣</option>-->
+      <!--                    <option value="8">饮料</option>-->
+      <!--                    <option value="9">零食</option>-->
+      <!--                </select>-->
+      <!--              <div class="col-sm-9">-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--            <div class="modal-footer">-->
+      <!--              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>-->
+      <!--              <button type="submit" onclick="addGoods()" class="btn btn-primary">立即保存</button>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          </div>-->
+      <!--        </form>-->
+      <!--      </div>-->
+
+      <!--    </div>-->
+      <!--  </div>-->
+      <!--</div>-->
 
       <!-- Modal -->
-      <div class="modal fade" id="deleteScenicModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">提示</h5>
-              <button type="button" class=" btn btn-close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body" id="removeRe">
+      <!--<div class="modal fade" id="deleteGoodsModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">-->
+      <!--  <div class="modal-dialog modal-dialog-centered">-->
+      <!--    <div class="modal-content">-->
+      <!--      <div class="modal-header">-->
+      <!--        <h5 class="modal-title" id="staticBackdropLabel">提示</h5>-->
+      <!--        <button type="button" class=" btn btn-close" data-dismiss="modal" aria-label="Close">-->
+      <!--          <span aria-hidden="true">&times;</span>-->
+      <!--        </button>-->
+      <!--      </div>-->
+      <!--      <div class="modal-body" id="removeRe">-->
 
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-              <a onclick="checkeds()" class="btn btn-primary" data-dismiss="modal">确认</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!--      </div>-->
+      <!--      <div class="modal-footer">-->
+      <!--        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>-->
+      <!--        <a onclick="checkeds()" class="btn btn-primary" data-dismiss="modal">确认</a>-->
+      <!--      </div>-->
+      <!--    </div>-->
+      <!--  </div>-->
+      <!--</div>-->
 
 
       <!-- content-wrapper ends -->
@@ -433,7 +471,7 @@
 
 <script th:src="@{/js/file-upload.js}"></script>
 
-<script th:src="@{/js/scenic-control.js}"></script>
+<script th:src="@{/js/goods-control.js}"></script>
 
 
 

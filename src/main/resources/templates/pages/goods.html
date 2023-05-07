@@ -245,13 +245,13 @@
               <div class="card-body">
                 <h4 class="card-title">浴室类型管理</h4>
                 <div class="input-group">
-                  <button type="button" class="btn btn-inverse-success btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#addScenicModal">
+                  <button type="button" class="btn btn-inverse-success btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#addGoodsModal">
                     <i class="mdi mdi-plus text-muted"></i>
                   </button>
-                  <button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteScenicModal">
+                  <button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteGoodsModal">
                     <i class="mdi mdi-delete-forever text-muted"></i>
                   </button>
-                  <form class="forms-sample" method="get"  th:action="@{/scenic/search}">
+                  <form class="forms-sample" method="get"  th:action="@{/goods/search}">
                     <div class="input-group-prepend" style="width: 400px">
                       <div class="input-group" id="search1">
                         <i class="mdi mdi-magnify input-group-text" style="height: 40px;"></i>
@@ -278,32 +278,40 @@
                         id
                       </th>
                       <th>
-                        浴室名称
+                        商品名称
                       </th>
-
                       <th>
                         图片
                       </th>
+                      <th>
+                        价格
+                      </th>
+                      <th>
+                        商品类型
+                      </th>
+
                     </tr>
                     </thead>
                     <tbody id="checklist">
-                    <tr th:each="allScenic:${scenicList}">
+                    <tr th:each="allGoods:${goodsList}">
                       <th>
                         <div class="form-check" >
                           <label class="form-check-label">
-                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allScenic.scenic.id}">
+                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allGoods.good.id}">
                             <!--<input type="hidden" >-->
                           </label>
                         </div>
                       </th>
-                      <td th:text="${allScenic.scenic.id}">
-                        1
+                      <td th:text="${allGoods.good.id}">
                       </td>
-                      <td th:text="${allScenic.scenic.scenicName}">
-                        故宫
+                      <td th:text="${allGoods.good.name}">
                       </td>
                       <td>
-                        <img th:src="${allScenic.scenic.imageUrl}" class="rounded-0 rounded-lg" style="width: 180px;height: 100px">
+                        <img th:src="${allGoods.good.cover}" class="rounded-0 rounded-lg" style="width: 180px;height: 100px">
+                      </td>
+                      <td th:text="${allGoods.good.price}">
+                      </td>
+                      <td th:text="${allGoods.good.goodsType}">
                       </td>
                     </tr>
                     </tbody>
@@ -343,40 +351,66 @@
 
 
       <!-- Modal -->
-      <div class="modal fade" id="addScenicModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="addGoodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">添加浴室</h5>
+              <h5 class="modal-title" id="exampleModalLabel">添加商品</h5>
               <button type="button" class="btn btn-sm btn-close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <form class="forms-sample" id="addScenic"  enctype="multipart/form-data" method="post" th:action="@{/addScenic}">
+              <form class="forms-sample" id="addGoods"  enctype="multipart/form-data" method="post" th:action="@{/addGoods}">
                 <div class="row">
-                  <div class="form-group row col-md-6">
-                    <label for="scenicName" class="col-sm-3 col-form-label">浴室名称：</label>
+                  <div class="form-group row col-md-8">
+                    <label for="goodName" class="col-sm-3 col-form-label">商品名称：</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" id="scenicName" name="scenicName" placeholder="" required>
-                      <div class="invalid-feedback" id="scenicNameMsg"></div>
+                      <input type="text" class="form-control" id="goodName" name="goodName" placeholder="" required>
+                      <div class="invalid-feedback" id="goodNameMsg"></div>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label>浴室图片：</label>
-                    <input type="file" name="scenicImg" class="file-upload-default" id="scenicImg" required>
+                    <label>商品图片：</label>
+                    <input type="file" name="goodImg" class="file-upload-default" id="goodImg" required>
                     <div class="input-group col-xs-12">
                       <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image" required>
-                      <div class="invalid-feedback" id="scenicImgMsg"></div>
+                      <div class="invalid-feedback" id="goodImgMsg"></div>
                       <span class="input-group-append">
                           <button class="file-upload-browse btn btn-primary" type="button">上传文件</button>
                         </span>
                     </div>
                   </div>
 
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                  <button type="submit" onclick="addScenic()" class="btn btn-primary">立即保存</button>
+                  <div class="form-group row col-md-8">
+                    <label for="goodName" class="col-sm-3 col-form-label">商品价格：</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" id="goodPrice" name="goodPrice" placeholder="" required>
+                      <div class="invalid-feedback" id="goodPriceMsg"></div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row col-md-8">
+                    <label class="col-sm-3 col-form-label">商品类型：</label>
+                    <div class="col-sm-9">
+                      <select name="goodType" class="form-select" aria-label="Default select example">
+                          <option value="1">毛巾</option>
+                          <option value="2">香皂</option>
+                          <option value="3">沐浴露</option>
+                          <option value="4">洗发露</option>
+                          <option value="5">护发素</option>
+                          <option value="6">刮胡刀</option>
+                          <option value="7">内衣</option>
+                          <option value="8">饮料</option>
+                          <option value="9">零食</option>
+                      </select>
+                    <div class="col-sm-9">
+                  </div>
+                </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="submit" onclick="addGoods()" class="btn btn-primary">立即保存</button>
+                  </div>
                 </div>
                 </div>
               </form>
@@ -387,7 +421,7 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal fade" id="deleteScenicModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal fade" id="deleteGoodsModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -433,7 +467,7 @@
 
 <script th:src="@{/js/file-upload.js}"></script>
 
-<script th:src="@{/js/scenic-control.js}"></script>
+<script th:src="@{/js/goods-control.js}"></script>
 
 
 
