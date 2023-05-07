@@ -2,7 +2,6 @@ package com.fuchen.travel.background.mapper;
 
 import com.fuchen.travel.background.entity.Goods;
 import com.fuchen.travel.background.entity.GoodsOrder;
-import com.fuchen.travel.background.entity.Scenic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

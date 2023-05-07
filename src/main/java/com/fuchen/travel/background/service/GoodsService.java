@@ -2,7 +2,6 @@ package com.fuchen.travel.background.service;
 
 import com.fuchen.travel.background.entity.Goods;
 import com.fuchen.travel.background.entity.GoodsOrder;
-import com.fuchen.travel.background.entity.Scenic;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
