@@ -1,9 +1,8 @@
 package com.fuchen.travel.background.controller;
 
-import com.fuchen.travel.background.entity.Scenic;
-import com.fuchen.travel.background.entity.User;
+import com.fuchen.travel.background.entity.Preserve;
 import com.fuchen.travel.background.service.DiscussPostService;
-import com.fuchen.travel.background.service.ScenicService;
+import com.fuchen.travel.background.service.PreserveService;
 import com.fuchen.travel.background.service.UserService;
 import com.fuchen.travel.background.util.HostHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,7 @@ import java.util.*;
 public class IndexController {
 
     @Autowired
-    private ScenicService scenicService;
+    private PreserveService preserveService;
 
     @Autowired
     private UserService userService;
@@ -45,13 +44,13 @@ public class IndexController {
     @GetMapping("/index")
     public String index(Model model, @CookieValue("ticket") String ticket, HttpServletRequest request){
         //获取推荐的景点集合
-        List<Scenic> scenicList = scenicService.findRecommendScenic();
+        List<Preserve> preserveList = preserveService.findRecommendScenic();
         //创建一个list集合，用于保存数据
-        List<Map<String, Scenic>> recommendScenicList = new ArrayList<>();
+        List<Map<String, Preserve>> recommendScenicList = new ArrayList<>();
         //循环遍历景点集合，将每个景点对象都放入map集合中，之后放入到创建的list集合中保存数据
-        for (int i = 0; i < scenicList.size(); i++) {
-            Map<String, Scenic> map = new HashMap<>();
-            map.put("scenicList", scenicList.get(i));
+        for (int i = 0; i < preserveList.size(); i++) {
+            Map<String, Preserve> map = new HashMap<>();
+            map.put("scenicList", preserveList.get(i));
             recommendScenicList.add(map);
         }
         model.addAttribute("recommendScenicList", recommendScenicList);
@@ -60,14 +59,14 @@ public class IndexController {
         //将今日时期，用户数量，景点数量，帖子数量，封禁用户放入model中
         model.addAttribute("nowDate", new Date());
         model.addAttribute("userCount", userService.getUserCount(request));
-        model.addAttribute("scenicCount", scenicService.getScenicCount());
+        model.addAttribute("scenicCount", preserveService.getScenicCount());
         model.addAttribute("discussPostCount", discussPostService.getPostCount(null));
         model.addAttribute("banUserCount", userService.getBanUserCount());
 
         model.addAttribute("loginUser", userService.getLoginUser(request));
 
         //推荐景点数量
-        model.addAttribute("scenicRecommendCount", scenicService.getScenicRecommendCount());
+        model.addAttribute("scenicRecommendCount", preserveService.getScenicRecommendCount());
 
         return "/index";
     }

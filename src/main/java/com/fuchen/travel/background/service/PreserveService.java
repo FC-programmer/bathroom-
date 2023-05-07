@@ -1,6 +1,6 @@
 package com.fuchen.travel.background.service;
 
-import com.fuchen.travel.background.entity.Scenic;
+import com.fuchen.travel.background.entity.Preserve;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -10,13 +10,13 @@ import java.util.List;
  * @date 2023/1/5
  * 景点-service层
  */
-public interface ScenicService {
+public interface PreserveService {
 
     /**
      * 获取推荐景点信息
      * @return 推荐景点的list集合
      */
-    List<Scenic> findRecommendScenic ();
+    List<Preserve> findRecommendScenic ();
 
     /**
      * 获取景点总数
@@ -39,10 +39,10 @@ public interface ScenicService {
      * @param limit 简述条数
      * @return 景点的list集合
      */
-    List<Scenic> getScenic(Integer offset, Integer limit);
-    List<Scenic> getScenic1(Integer offset, Integer limit);
-    List<Scenic> getScenic2(Integer offset, Integer limit);
-    List<Scenic> getScenic3(Integer offset, Integer limit);
+    List<Preserve> getScenic(Integer offset, Integer limit);
+    List<Preserve> getScenic1(Integer offset, Integer limit);
+    List<Preserve> getScenic2(Integer offset, Integer limit);
+    List<Preserve> getScenic3(Integer offset, Integer limit);
     /**
      * 推荐景点
      * @param recommendScenic 景点id
@@ -70,9 +70,9 @@ public interface ScenicService {
 
     /**
      * 添加景点
-     * @param scenic
+     * @param preserve
      */
-    void addScenic(Scenic scenic, MultipartFile scenicImg, String filename, String suffix);
+    void addScenic(Preserve preserve, MultipartFile scenicImg, String filename, String suffix);
 
     /**
      * 移出景点
@@ -94,7 +94,7 @@ public interface ScenicService {
      * @param limit
      * @return
      */
-    List<Scenic> getScenicSearch(String keyword, Integer offset, Integer limit);
+    List<Preserve> getScenicSearch(String keyword, Integer offset, Integer limit);
 
     Integer updateAudit(Integer auditId, Integer audit);
 }

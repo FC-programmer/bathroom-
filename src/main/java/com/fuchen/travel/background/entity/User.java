@@ -66,4 +66,8 @@ public class User {
      * 上次操作时间
      */
     private Date createTime;
+
+    private Integer integration;
+
+    private Integer balance;
 }

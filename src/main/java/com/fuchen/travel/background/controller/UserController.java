@@ -65,7 +65,7 @@ public class UserController {
         page.setPath("/user-control");
         page.setRows(userCount);
         //分页查询用户集合
-        List<User> users = userService.getAllUser(page.getOffset(), page.getLimit());
+        List<User> users = userService.getAllUser(page.getOffset(), page.getLimit(), request);
         //创建list用于存放用户列表数据
         List<Map<String, User>> userList = new ArrayList<>(userCount);
         //循环遍历，将数据放入map后加入到list集合中
@@ -76,7 +76,7 @@ public class UserController {
         }
 
         model.addAttribute("userList", userList);
-
+        model.addAttribute("loginUser", userService.getLoginUser(request));
         return "/pages/user-control";
     }
 
@@ -85,7 +85,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/setting")
-    public String getSettingPage() {
+    public String getSettingPage(Model model, HttpServletRequest request) {
+        model.addAttribute("loginUser", userService.getLoginUser(request));
+
 
         return "/pages/setting";
     }
@@ -236,7 +238,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/user/search")
-    public String searchUser(String keyword, String type, Model model, Page page){
+    public String searchUser(String keyword, String type, Model model, Page page, HttpServletRequest request){
         //判断关键字是否为空
         if (keyword.isEmpty()) {
             model.addAttribute("searchMsg", "请输入搜素内容！");
@@ -262,6 +264,7 @@ public class UserController {
         }
 
         model.addAttribute("userList", userList);
+        model.addAttribute("loginUser", userService.getLoginUser(request));
 
         return "/pages/user-control";
     }
