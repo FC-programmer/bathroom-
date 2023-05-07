@@ -217,10 +217,10 @@
                                         <!--表体-->
                                         <tbody >
                                         <tr th:each="scenicListRe:${recommendScenicList}">
-                                            <td th:text="${scenicListRe.preserveList.id}">1</td>
-                                            <td th:text="${scenicListRe.preserveList.scenicName}">故宫</td>
+                                            <td th:text="${scenicListRe.scenicList.id}">1</td>
+                                            <td th:text="${scenicListRe.scenicList.scenicName}">故宫</td>
                                             <td>
-                                                <img th:src="${scenicListRe.preserveList.imageUrl}" class="rounded-0 rounded-sm" style="width: 150px;height: 80px" alt="景点图片">
+                                                <img th:src="${scenicListRe.scenicList.imageUrl}" class="rounded-0 rounded-sm" style="width: 150px;height: 80px" alt="景点图片">
                                             </td>
                                         </tr>
                                         </tbody>
