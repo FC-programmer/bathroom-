@@ -65,7 +65,7 @@ public class ScenicServiceImpl implements ScenicService {
      * 腾讯云工具类对象
      */
     @Autowired
-    private QCloudUtil qCloudUtil;;
+    private QCloudUtil qCloudUtil;
 
     /**
      * 获取推荐景点信息
