@@ -4,7 +4,6 @@ import com.fuchen.travel.background.service.UserService;
 import com.fuchen.travel.background.util.TravelConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -39,11 +39,11 @@ public class LoginController implements TravelConstant {
     }
 
     @PostMapping("/login")
-    public String login(String username, String password, boolean rememberMe, Model model, HttpServletResponse response) {
+    public String login(String username, String password, boolean rememberMe, Model model, HttpServletResponse response, HttpServletRequest request) {
 
         //检查账号、密码
         int expireSeconds = rememberMe ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
-        Map<String, Object> map = userService.login(username, password, expireSeconds);
+        Map<String, Object> map = userService.login(username, password, expireSeconds, request);
         if (map.containsKey("ticket")) {
             Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
             cookie.setPath(contextPath);
@@ -66,7 +66,6 @@ public class LoginController implements TravelConstant {
     @GetMapping("/logout")
     public String logout(@CookieValue("ticket") String ticket){
         userService.logout(ticket);
-        SecurityContextHolder.clearContext();
         return "redirect:/login";
     }
 }

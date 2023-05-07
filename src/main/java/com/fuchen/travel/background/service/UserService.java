@@ -3,10 +3,10 @@ package com.fuchen.travel.background.service;
 import com.fuchen.travel.background.entity.LoginTicket;
 import com.fuchen.travel.background.entity.Scenic;
 import com.fuchen.travel.background.entity.User;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public interface UserService {
      * 获取普通用户数量
      * @return
      */
-    Integer getUserCount();
+    Integer getUserCount(HttpServletRequest request);
 
     /**
      * 获取封禁用户数量
@@ -52,7 +52,7 @@ public interface UserService {
      * @param expiredSeconds 时间
      * @return Map集合
      */
-    Map<String, Object> login(String username, String password, Integer expiredSeconds);
+    Map<String, Object> login(String username, String password, Integer expiredSeconds, HttpServletRequest request);
 
     /**
      * 退出登录
@@ -85,7 +85,6 @@ public interface UserService {
 
 
 
-    Collection<? extends GrantedAuthority> getAuthorities(Integer userId);
 
 
     /**
@@ -137,6 +136,7 @@ public interface UserService {
      */
     void uploadHeaderToQCloud(MultipartFile headerImg, String filename, String suffix);
 
+    User getLoginUser(HttpServletRequest request);
     /**
      * 移出用户信息
      * @param list

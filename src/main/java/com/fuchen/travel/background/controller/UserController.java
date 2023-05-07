@@ -55,10 +55,10 @@ public class UserController {
      * @return
      */
     @GetMapping("/user-control")
-    public String getUserControlPage(Model model, Page page) {
+    public String getUserControlPage(Model model, Page page, HttpServletRequest request) {
 
         //获取用户数量
-        Integer userCount = userService.getUserCount();
+        Integer userCount = userService.getUserCount(request);
 
         //设置分页数据
         page.setLimit(5);

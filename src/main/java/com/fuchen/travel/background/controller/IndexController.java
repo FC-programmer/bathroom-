@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -42,7 +43,7 @@ public class IndexController {
      * @return
      */
     @GetMapping("/index")
-    public String index(Model model, @CookieValue("ticket") String ticket){
+    public String index(Model model, @CookieValue("ticket") String ticket, HttpServletRequest request){
         //获取推荐的景点集合
         List<Scenic> scenicList = scenicService.findRecommendScenic();
         //创建一个list集合，用于保存数据
@@ -58,10 +59,12 @@ public class IndexController {
         model.addAttribute("recommendScenicList", recommendScenicList);
         //将今日时期，用户数量，景点数量，帖子数量，封禁用户放入model中
         model.addAttribute("nowDate", new Date());
-        model.addAttribute("userCount", userService.getUserCount());
+        model.addAttribute("userCount", userService.getUserCount(request));
         model.addAttribute("scenicCount", scenicService.getScenicCount());
         model.addAttribute("discussPostCount", discussPostService.getPostCount(null));
         model.addAttribute("banUserCount", userService.getBanUserCount());
+
+        model.addAttribute("loginUser", userService.getLoginUser(request));
 
         //推荐景点数量
         model.addAttribute("scenicRecommendCount", scenicService.getScenicRecommendCount());

@@ -15,10 +15,10 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -90,8 +90,8 @@ public class UserServiceImpl implements UserService, TravelConstant {
      * @return
      */
     @Override
-    public Integer getUserCount() {
-        User user = hostHolder.getUser();
+    public Integer getUserCount(HttpServletRequest request) {
+        User user = getLoginUser(request);
         if (user.getType() == 1) {
             //从redis中获取普通用户数量
             Integer userCount = (Integer) redisTemplate.opsForValue().get("userCount");
@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService, TravelConstant {
      * @return Map集合
      */
     @Override
-    public Map<String, Object> login(String username, String password, Integer expiredSeconds) {
+    public Map<String, Object> login(String username, String password, Integer expiredSeconds, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
 
         //空值判断
@@ -196,6 +196,7 @@ public class UserServiceImpl implements UserService, TravelConstant {
 
         //验证账号
         User user = userMapper.selectByName(username);
+        request.getSession().setAttribute("user", user);
         if (user == null) {
             map.put("usernameMsg", "不存在该账号！");
             return map;
@@ -291,26 +292,6 @@ public class UserServiceImpl implements UserService, TravelConstant {
     private void clearCache(Integer userId){
         String redisKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.delete(redisKey);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(Integer userId) {
-        User user = this.getUserById(userId);
-        List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                switch (user.getType()){
-                    case 1:
-                        return  AUTHORITY_ADMIN;
-                    case 2:
-                        return AUTHORITY_MODERATOR;
-                    default:
-                        return AUTHORITY_USER;
-                }
-            }
-        });
-        return list;
     }
 
     /**
@@ -542,6 +523,9 @@ public class UserServiceImpl implements UserService, TravelConstant {
         userMapper.uploadHeader(user.getId(), headerUrl);
     }
 
+    public User getLoginUser(HttpServletRequest request) {
+        return (User) request.getSession().getAttribute("user");
+    }
 
 
 

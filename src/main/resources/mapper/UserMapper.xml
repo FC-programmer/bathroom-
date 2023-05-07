@@ -5,13 +5,13 @@
 <mapper namespace="com.fuchen.travel.background.mapper.UserMapper">
     <!--插入用户信息-->
     <insert id="insertUser">
-        INSERT into user (username, password, salt, email, type, status, header_url, create_time)
+        INSERT into sys_user (username, password, salt, email, type, status, header_url, create_time)
         values (#{username}, #{password}, #{salt}, #{email}, 1, 1, #{headerUrl}, #{createTime})
     </insert>
     <!--删除用户信息-->
     <delete id="deleteUserById">
         delete from
-        user
+        sys_user
         where id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -19,7 +19,7 @@
     </delete>
     <!--修改用户状态为封禁-->
     <update id="updateUserToBanStatus">
-        UPDATE user
+        UPDATE sys_user
         set status = 2
         where id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -28,7 +28,7 @@
     </update>
     <!--修改用户状态为正常-->
     <update id="updateUserToNoBanStatus">
-        UPDATE user
+        UPDATE sys_user
         set status = 1
         where id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -39,35 +39,35 @@
     <!--查询普通用户数量-->
     <select id="selectUserCount" resultType="integer">
         SELECT COUNT(*)
-        FROM user
+        FROM sys_user
         WHERE type = 0;
     </select>
 
     <!--查询封禁用户数量-->
     <select id="selectBanUserCount" resultType="Integer">
         SELECT COUNT(*)
-        FROM user
+        FROM sys_user
         WHERE status = 2;
     </select>
     <!--根据用户名查询用户-->
     <select id="selectByName" resultType="User">
 
         SELECT id, username, password, salt, email, type, status, header_url, create_time
-        FROM user
+        FROM sys_user
         WHERE username = #{username};
 
     </select>
     <!--根据用户id查询用户信息-->
     <select id="selectUserById" resultType="User">
         SELECT id, username, salt, email, type, status, header_url, create_time
-        FROM user
+        FROM sys_user
         WHERE id = #{userId};
     </select>
 
     <!--分页查询用户信息-->
     <select id="selectAllUser" resultType="User">
         SELECT id, username, email, type, status, create_time
-        FROM user
+        FROM sys_user
         <if test="type==1">
             WHERE type = 0
             ORDER BY id , status
@@ -81,7 +81,7 @@
 
     <!--修改用户信息-->
     <update id="updateUser">
-        UPDATE USER
+        UPDATE sys_user
         <set>
             <if test="id!=null">
                 <if test="password!=null">
@@ -107,26 +107,26 @@
 
     <!--判断用户是否存在-->
     <select id="userByUsernameExist" >
-        SELECT 1 FROM user WHERE username = #{username};
+        SELECT 1 FROM sys_user WHERE username = #{username};
     </select>
     <!--查询指定用户名是否存在-->
     <select id="selectUsernameExist" resultType="Integer">
-        SELECT 1 FROM user WHERE username = #{username};
+        SELECT 1 FROM sys_user WHERE username = #{username};
     </select>
     <!--查询指定邮箱是否存在-->
     <select id="selectEmailExist" resultType="Integer">
-        SELECT 1 FROM user WHERE email = #{email};
+        SELECT 1 FROM sys_user WHERE email = #{email};
     </select>
     <!--查询全部用户数量-->
     <select id="selectUserCountAll" resultType="Integer">
         SELECT COUNT(*)
-        FROM user
+        FROM sys_user
         WHERE type != 2;
     </select>
     <!--模糊查询用户信息-->
     <select id="selectUserByKeyword" resultType="User">
         SELECT id, username, email, type, status, create_time
-        FROM user
+        FROM sys_user
         WHERE
             <if test="type==1">
               type=0 AND
@@ -138,7 +138,7 @@
     <!--模糊查询用户数量-->
     <select id="selectUserCountByKeyword" resultType="Integer">
         SELECT COUNT(*)
-        FROM user
+        FROM sys_user
         WHERE
             <if test="type==1">
                     type=0 AND
@@ -148,33 +148,33 @@
     <!--查询管理员数量-->
     <select id="selectUserCountAdmin" resultType="Integer">
         SELECT COUNT(*)
-        FROM user
+        FROM sys_user
         WHERE type = #{type};
     </select>
     <!--查询管理员信息-->
     <select id="selectAllUserAdmin" resultType="User">
         SELECT id, username, email, type , status, create_time
-        FROM user
+        FROM sys_user
         WHERE type = #{type}
         LIMIT #{offset},#{limit};
     </select>
 
     <select id="selectUserBan" resultType="User">
         SELECT id, username, email, type, status, create_time
-        FROM user
+        FROM sys_user
         WHERE status = 2
         LIMIT #{offset},#{limit};
     </select>
 
     <!--根据id修改密码-->
     <update id="updatePasswordById">
-        UPDATE user
+        UPDATE sys_user
         SET password = #{password}
         WHERE id = #{id};
     </update>
     <!--修改用户头像-->
     <update id="uploadHeader">
-        UPDATE user
+        UPDATE sys_user
         SET header_url = #{headerUrl}
         WHERE id = #{id};
     </update>
