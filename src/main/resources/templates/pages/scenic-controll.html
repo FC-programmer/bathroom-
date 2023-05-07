@@ -245,13 +245,13 @@
               <div class="card-body">
                 <h4 class="card-title">预约订单管理</h4>
                 <div class="input-group">
-                  <button type="button" class="btn btn-inverse-success btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#addScenicModal">
-                    <i class="mdi mdi-plus text-muted"></i>
-                  </button>
-                  <button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteScenicModal">
-                    <i class="mdi mdi-delete-forever text-muted"></i>
-                  </button>
-                  <form class="forms-sample" method="get"  th:action="@{/preserve/search}">
+                  <!--<button type="button" class="btn btn-inverse-success btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#addScenicModal">-->
+                  <!--  <i class="mdi mdi-plus text-muted"></i>-->
+                  <!--</button>-->
+                  <!--<button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteScenicModal">-->
+                  <!--  <i class="mdi mdi-delete-forever text-muted"></i>-->
+                  <!--</button>-->
+                  <form class="forms-sample" method="get"  th:action="@{/scenic/search}">
                     <div class="input-group-prepend" style="width: 400px">
                       <div class="input-group" id="search1">
                         <i class="mdi mdi-magnify input-group-text" style="height: 40px;"></i>
@@ -267,13 +267,6 @@
                   <table class="table table-bordered text-center">
                     <thead>
                     <tr>
-                      <th>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input type="checkbox" name="allSel" id="all" class="form-check-input">
-                          </label>
-                        </div>
-                      </th>
                       <th>
                         id
                       </th>
@@ -295,35 +288,30 @@
                     </tr>
                     </thead>
                     <tbody id="checklist">
-                    <tr th:each="allScenic:${scenicList1}">
-                      <th>
-                        <div class="form-check" >
-                          <label class="form-check-label">
-                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allScenic.preserve.id}">
-                            <!--<input type="hidden" >-->
-                          </label>
-                        </div>
-                      </th>
-                      <td th:text="${allScenic.preserve.id}">
+                    <tr th:each="preserves:${preserveList}">
+                      <td th:text="${preserves.preserve.id}">
                         1
                       </td>
-                      <td th:text="${allScenic.preserve.scenicName}">
+                      <td th:text="${preserves.preserve.bathroomtype}">
                         故宫
                       </td>
-                      <td th:text="${allScenic.preserve.createTime}">
+                      <td th:text="${preserves.preserve.date}">
                         时间
                       </td>
 
-                      <td th:text="${allScenic.preserve.phone}">
+                      <td th:text="${preserves.preserve.phone}">
                         手机号
                       </td>
-                      <td th:text="${allScenic.preserve.notice}">
+                      <td th:text="${preserves.preserve.title}">
                         留言
                       </td>
                       <td>
-                        <button type="button" onclick="audit()"  class="btn btn-inverse-success" id="auditBtn" th:text="${allScenic.preserve.audit}==1?'已审核':'未审核'">审核</button>
-                        <input type="hidden" id="audit" th:value="${allScenic.preserve.audit}">
-                        <input type="hidden" id="auditId" th:value="${allScenic.preserve.id}">
+                        <form method="post" th:action="@{/audit}">
+                          <button type="submit" class="btn btn-inverse-success" id="auditBtn" th:if="${preserves.preserve.content}!=3" th:text="${preserves.preserve.content}==2?'已审核':'未审核'">审核</button>
+                          <span  th:text="${preserves.preserve.content}==3?'已取消':''"></span>
+                          <input type="hidden" id="audit" name="audit" th:value="|${preserves.preserve.content}|">
+                          <input type="hidden" id="auditId" name="auditId" th:value="|${preserves.preserve.id}|">
+                        </form>
                       </td>
                     </tr>
                     </tbody>
@@ -453,6 +441,7 @@
   function audit() {
     let audit = $("#audit").val();
     let auditId = $("#auditId").val();
+    alert(auditId)
     $.post(
             "/travel/audit",
             {"audit":audit,"auditId":auditId},
@@ -479,7 +468,7 @@
 
 <script th:src="@{/js/file-upload.js}"></script>
 
-<script th:src="@{/js/preserve-control.js}"></script>
+<script th:src="@{/js/scenic-control.js}"></script>
 
 <script th:src="@{/js/jquery-3.3.1.js}"></script>
 

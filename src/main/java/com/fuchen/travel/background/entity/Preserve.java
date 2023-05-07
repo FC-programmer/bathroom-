@@ -17,61 +17,11 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 public class Preserve {
-    /**
-     * 景点id
-     */
     private Integer id;
-
-    /**
-     * 景点名称
-     */
-    private String scenicName;
-
-    /**
-     * 景点简介
-     */
-    private String introduce;
-
-    /**
-     * 景点说明
-     */
-    private String content;
-
-    /**
-     * 旅游须知
-     */
-    private String notice;
-
-    /**
-     * 景点图片路径
-     */
-    private String imageUrl;
-
-    /**
-     * 景点价格
-     */
-    private Double price;
-
-    /**
-     * 景点经营者
-     */
-    private String merchant;
-
-    /**
-     * 景点联系电话
-     */
+    private Integer number;
+    private String bathroomtype;
+    private String title;
+    private String date;
     private String phone;
-
-    /**
-     * 景点地址
-     */
-    private String address;
-
-    /**
-     * 景点创建时间
-     */
-    private Date createTime;
-
-    private Integer audit;
-
+    private Integer content;
 }

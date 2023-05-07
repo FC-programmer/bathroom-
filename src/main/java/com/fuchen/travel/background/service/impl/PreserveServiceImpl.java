@@ -247,8 +247,8 @@ public class PreserveServiceImpl implements PreserveService {
 
         //更新景点图片路径
         String scenicUrl = qCloudUrl + "/" +  filename ;
-        preserve.setImageUrl(scenicUrl);
-        preserve.setCreateTime(new Date());
+        //preserve.setImageUrl(scenicUrl);
+        //preserve.setCreateTime(new Date());
 
         //如果景点id为空说明已经不存在该景点，应该添加当前景点，否则为修改景点
         if (preserve.getId() == null) {
@@ -298,7 +298,7 @@ public class PreserveServiceImpl implements PreserveService {
 
     @Override
     public Integer updateAudit(Integer auditId, Integer audit) {
-        if (audit == 0) {
+        if (audit == 1) {
             audit ++;
         }
         return scenicMapper.updateAudit(auditId, audit);

@@ -45,7 +45,7 @@
         </foreach>
     </update>
     <update id="updateAudit">
-        update preserve set audit = #{audit} where id = #{id}
+        update preserve set content = #{audit} where id = #{id}
     </update>
 
     <!--查询推荐景点-->
@@ -116,12 +116,12 @@
     <select id="selectCountByKeyword" resultType="Integer">
         SELECT COUNT(*)
         FROM preserve
-        WHERE scenic_name LIKE "%"#{keyword}"%";
+        WHERE phone LIKE "%"#{keyword}"%";
     </select>
     <select id="selectScenicByKeyword" resultType="Preserve">
         SELECT *
         FROM preserve
-        WHERE scenic_name LIKE "%"#{keyword}"%";
+        WHERE phone LIKE "%"#{keyword}"%";
     </select>
 
 </mapper>

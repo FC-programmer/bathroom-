@@ -3,6 +3,7 @@ package com.fuchen.travel.background.controller;
 import com.fuchen.travel.background.entity.Page;
 import com.fuchen.travel.background.entity.Preserve;
 import com.fuchen.travel.background.service.PreserveService;
+import com.fuchen.travel.background.service.UserService;
 import com.fuchen.travel.background.util.TravelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,6 +32,9 @@ public class PreserveController {
 
     @Autowired
     private PreserveService preserveService;
+
+    @Resource
+    private UserService userService;
 
     @Value("${scenic.path.image}")
     private String scenicImage;
@@ -69,7 +75,7 @@ public class PreserveController {
      * @return
      */
     @GetMapping("/scenic-controll")
-    public String scenicControl1(Model model, Page page) {
+    public String scenicControl1(Model model, Page page, HttpServletRequest request) {
         //获取景点数量
         Integer scenicCount = preserveService.getScenicCount1();
         //设置分页数据
@@ -84,20 +90,21 @@ public class PreserveController {
         //遍历景点集合，将其通过map放入list中
         for (int i = 0; i < preserve.size(); i++) {
             Map<String, Preserve> map = new HashMap<>();
-            map.put("scenic", preserve.get(i));
+            map.put("preserve", preserve.get(i));
             scenicList.add(map);
         }
 
-        model.addAttribute("scenicList1", scenicList);
+
+        model.addAttribute("preserveList", scenicList);
+        model.addAttribute("loginUser", userService.getLoginUser(request));
 
         return "/pages/scenic-controll";
     }
 
     @PostMapping("/audit")
-    @ResponseBody
-    public String updateAudit(Integer audit, Integer auditId) {
+    public String updateAudit(Integer audit, Integer auditId, HttpServletRequest request) {
         preserveService.updateAudit(auditId, audit);
-        return TravelUtil.getJsonString(0);
+        return "redirect:/scenic-controll";
     }
 
     /**
@@ -238,7 +245,7 @@ public class PreserveController {
     public String addScenic(String scenicName, MultipartFile scenicImg, Model model){
 
         Preserve preserve = new Preserve();
-        preserve.setScenicName(scenicName);
+        //preserve.setScenicName(scenicName);
 
         //判断文件后缀
         String filename = scenicImg.getOriginalFilename();
@@ -272,7 +279,7 @@ public class PreserveController {
     }
 
     @GetMapping("/scenic/search")
-    public String searchUser(String keyword, Model model, Page page){
+    public String searchUser(String keyword, Model model, Page page, HttpServletRequest request){
         //判断关键字是否为空
         if (keyword.isEmpty()) {
             model.addAttribute("searchMsg", "请输入搜素内容！");
@@ -293,12 +300,13 @@ public class PreserveController {
         //遍历景点集合，将其通过map放入list中
         for (int i = 0; i < preserve.size(); i++) {
             Map<String, Preserve> map = new HashMap<>();
-            map.put("scenic", preserve.get(i));
+            map.put("preserve", preserve.get(i));
             scenicList.add(map);
         }
 
-        model.addAttribute("scenicList", scenicList);
+        model.addAttribute("preserveList", scenicList);
+        model.addAttribute("loginUser", userService.getLoginUser(request));
 
-        return "/pages/scenic-control";
+        return "/pages/scenic-controll";
     }
 }
