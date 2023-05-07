@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Scenic {
+public class Preserve {
     /**
      * 景点id
      */

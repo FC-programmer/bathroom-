@@ -1,13 +1,11 @@
 package com.fuchen.travel.background.service;
 
 import com.fuchen.travel.background.entity.LoginTicket;
-import com.fuchen.travel.background.entity.Scenic;
 import com.fuchen.travel.background.entity.User;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
