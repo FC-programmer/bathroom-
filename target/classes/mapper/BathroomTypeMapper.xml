@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuchen.travel.background.mapper.BathroomTypeMapper">
+    <insert id="insertBathroomType">
+        INSERT INTO
+            BathroomType (name, url)
+        values (#{bathroomType.name}, #{bathroomType.url});
+    </insert>
+    <update id="updateBathroomType">
+        UPDATE BathroomType
+        SET content = 1
+        WHERE id = #{id};
+    </update>
+    <update id="updateBathroomTypeById">
+        delete from BathroomType
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--查询浴室总数-->
+    <select id="selectScenicCount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM BathroomType
+    </select>
+
+    <select id="selectBathroomType" resultType="com.fuchen.travel.background.entity.BathroomType">
+        SELECT id, name ,url,content
+        FROM BathroomType
+        ORDER BY id
+            LIMIT #{offset}, #{limit};
+    </select>
+    <select id="selectCountByKeyword" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM BathroomType
+        WHERE name LIKE "%"#{keyword}"%";
+    </select>
+    <select id="selectBathroomTypeByKeyword" resultType="com.fuchen.travel.background.entity.BathroomType">
+        SELECT id, name, url
+        FROM BathroomType
+        WHERE name LIKE "%"#{keyword}"%";
+    </select>
+
+</mapper>

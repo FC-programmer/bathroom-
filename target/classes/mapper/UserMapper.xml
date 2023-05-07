@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuchen.travel.background.mapper.UserMapper">
+    <!--插入用户信息-->
+    <insert id="insertUser">
+        INSERT into sys_user (username, password, salt, email, type, status, header_url, create_time)
+        values (#{username}, #{password}, #{salt}, #{email}, 1, 1, #{headerUrl}, #{createTime})
+    </insert>
+    <!--删除用户信息-->
+    <delete id="deleteUserById">
+        delete from
+        user
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--修改用户状态为封禁-->
+    <update id="updateUserToBanStatus">
+        UPDATE sys_user
+        set status = 2
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <!--修改用户状态为正常-->
+    <update id="updateUserToNoBanStatus">
+        UPDATE sys_user
+        set status = 1
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--查询普通用户数量-->
+    <select id="selectUserCount" resultType="integer">
+        SELECT COUNT(*)
+        FROM sys_user
+        WHERE type = 0;
+    </select>
+
+    <!--查询封禁用户数量-->
+    <select id="selectBanUserCount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM sys_user
+        WHERE status = 2;
+    </select>
+    <!--根据用户名查询用户-->
+    <select id="selectByName" resultType="User">
+
+        SELECT id, username, password, salt, email, type, status, header_url, create_time
+        FROM sys_user
+        WHERE username = #{username};
+
+    </select>
+    <!--根据用户id查询用户信息-->
+    <select id="selectUserById" resultType="User">
+        SELECT id, username, salt, email, type, status, header_url, create_time
+        FROM sys_user
+        WHERE id = #{userId};
+    </select>
+
+    <!--分页查询用户信息-->
+    <select id="selectAllUser" resultType="User">
+        SELECT id, name as username, phone as email, integration, balance
+        FROM user
+        LIMIT ${offset}, ${limit};
+    </select>
+
+    <!--修改用户信息-->
+    <update id="updateUser">
+        UPDATE sys_user
+        <set>
+            <if test="id!=null">
+                <if test="password!=null">
+                    password = #{password},
+                </if>
+                <if test="headerUrl!=null">
+                    header_url = #{headerUrl},
+                </if>
+                WHERE id = #{id};
+            </if>
+
+            <if test="username!=null">
+                <if test="password!=null">
+                    password = #{password},
+                </if>
+                <if test="headerUrl!=null">
+                    header_url = #{headerUrl},
+                </if>
+                WHERE username = #{username};
+            </if>
+        </set>
+    </update>
+
+    <!--判断用户是否存在-->
+    <select id="userByUsernameExist" >
+        SELECT 1 FROM sys_user WHERE username = #{username};
+    </select>
+    <!--查询指定用户名是否存在-->
+    <select id="selectUsernameExist" resultType="Integer">
+        SELECT 1 FROM sys_user WHERE username = #{username};
+    </select>
+    <!--查询指定邮箱是否存在-->
+    <select id="selectEmailExist" resultType="Integer">
+        SELECT 1 FROM sys_user WHERE email = #{email};
+    </select>
+    <!--查询全部用户数量-->
+    <select id="selectUserCountAll" resultType="Integer">
+        SELECT COUNT(*)
+        FROM sys_user
+        WHERE type != 2;
+    </select>
+    <!--模糊查询用户信息-->
+    <select id="selectUserByKeyword" resultType="User">
+        SELECT id, name as username, phone as email, integration, balance
+        FROM user
+        WHERE phone LIKE "%"#{keyword}"%"
+        ORDER BY id
+        LIMIT #{offset}, #{limit};
+    </select>
+    <!--模糊查询用户数量-->
+    <select id="selectUserCountByKeyword" resultType="Integer">
+        SELECT COUNT(*)
+        FROM user
+       where phone LIKE "%"#{keyword}"%";
+    </select>
+    <!--查询管理员数量-->
+    <select id="selectUserCountAdmin" resultType="Integer">
+        SELECT COUNT(*)
+        FROM sys_user
+        WHERE type = #{type};
+    </select>
+    <!--查询管理员信息-->
+    <select id="selectAllUserAdmin" resultType="User">
+        SELECT id, username, email, type , status, create_time
+        FROM sys_user
+        WHERE type = #{type}
+        LIMIT #{offset},#{limit};
+    </select>
+
+    <select id="selectUserBan" resultType="User">
+        SELECT id, username, email, type, status, create_time
+        FROM sys_user
+        WHERE status = 2
+        LIMIT #{offset},#{limit};
+    </select>
+
+    <!--根据id修改密码-->
+    <update id="updatePasswordById">
+        UPDATE sys_user
+        SET password = #{password}
+        WHERE id = #{id};
+    </update>
+    <!--修改用户头像-->
+    <update id="uploadHeader">
+        UPDATE sys_user
+        SET header_url = #{headerUrl}
+        WHERE id = #{id};
+    </update>
+
+</mapper>
