@@ -34,7 +34,7 @@ public interface UserService {
      * @param limit
      * @return
      */
-    List<User> getAllUser(Integer offset, Integer limit);
+    List<User> getAllUser(Integer offset, Integer limit, HttpServletRequest request);
 
     /**
      * 获取用户信息

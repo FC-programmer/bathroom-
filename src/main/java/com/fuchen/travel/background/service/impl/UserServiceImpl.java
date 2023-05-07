@@ -144,8 +144,8 @@ public class UserServiceImpl implements UserService, TravelConstant {
      * @return
      */
     @Override
-    public List<User> getAllUser(Integer offset, Integer limit) {
-        User user = hostHolder.getUser();
+    public List<User> getAllUser(Integer offset, Integer limit, HttpServletRequest request) {
+        User user = getLoginUser(request);
         return userMapper.selectAllUser(offset, limit, user.getType());
     }
 
