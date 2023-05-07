@@ -1,6 +1,6 @@
 package com.fuchen.travel.background.mapper;
 
-import com.fuchen.travel.background.entity.Scenic;
+import com.fuchen.travel.background.entity.Preserve;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,7 +18,7 @@ public interface ScenicMapper {
      * 查询推荐的景点
      * @return 返回推荐的list集合
      */
-    List<Scenic> selectRecommendScenic ();
+    List<Preserve> selectRecommendScenic ();
 
     /**
      * 查询景点总数
@@ -35,10 +35,10 @@ public interface ScenicMapper {
      * @param limit 简述条数
      * @return 返回list集合
      */
-    List<Scenic> selectScenic(@Param("offset") Integer offset, @Param("limit") Integer limit);
-    List<Scenic> selectScenic1(@Param("offset") Integer offset, @Param("limit") Integer limit);
-    List<Scenic> selectScenic2(@Param("offset") Integer offset, @Param("limit") Integer limit);
-    List<Scenic> selectScenic3(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<Preserve> selectScenic(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<Preserve> selectScenic1(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<Preserve> selectScenic2(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<Preserve> selectScenic3(@Param("offset") Integer offset, @Param("limit") Integer limit);
     /**
      * 推荐景点
      * @param scenicId 景点id
@@ -56,19 +56,19 @@ public interface ScenicMapper {
      * @param scenicName
      * @return
      */
-    Scenic selectScenicExist(@Param("scenicName") String scenicName);
+    Preserve selectScenicExist(@Param("scenicName") String scenicName);
 
     /**
      * 插入景点信息
-     * @param scenic
+     * @param preserve
      */
-    void insertScenic(@Param("scenic") Scenic scenic);
+    void insertScenic(@Param("scenic") Preserve preserve);
 
     /**
      * 修改景点信息
-     * @param scenic
+     * @param preserve
      */
-    void updateScenic(@Param("scenic") Scenic scenic);
+    void updateScenic(@Param("scenic") Preserve preserve);
 
     /**
      * 修改景点的状态，将其设置为删除
@@ -96,9 +96,9 @@ public interface ScenicMapper {
      * @param limit
      * @return
      */
-    List<Scenic> selectScenicByKeyword(@Param("keyword") String keyword,
-                                       @Param("offset") Integer offset,
-                                       @Param("limit") Integer limit);
+    List<Preserve> selectScenicByKeyword(@Param("keyword") String keyword,
+                                         @Param("offset") Integer offset,
+                                         @Param("limit") Integer limit);
 
     Integer updateAudit(@Param("id") Integer id, @Param("audit") Integer audit);
 }

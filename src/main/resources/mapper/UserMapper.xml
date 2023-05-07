@@ -11,7 +11,7 @@
     <!--删除用户信息-->
     <delete id="deleteUserById">
         delete from
-        sys_user
+        user
         where id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -66,16 +66,8 @@
 
     <!--分页查询用户信息-->
     <select id="selectAllUser" resultType="User">
-        SELECT id, username, email, type, status, create_time
-        FROM sys_user
-        <if test="type==1">
-            WHERE type = 0
-            ORDER BY id , status
-        </if>
-        <if test="type==2">
-            WHERE type != 2
-            ORDER BY type DESC ,id , status
-        </if>
+        SELECT id, name as username, phone as email, integration, balance
+        FROM user
         LIMIT ${offset}, ${limit};
     </select>
 
@@ -125,25 +117,17 @@
     </select>
     <!--模糊查询用户信息-->
     <select id="selectUserByKeyword" resultType="User">
-        SELECT id, username, email, type, status, create_time
-        FROM sys_user
-        WHERE
-            <if test="type==1">
-              type=0 AND
-            </if>
-            status = 1 AND username LIKE "%"#{keyword}"%"
+        SELECT id, name as username, phone as email, integration, balance
+        FROM user
+        WHERE phone LIKE "%"#{keyword}"%"
         ORDER BY id
         LIMIT #{offset}, #{limit};
     </select>
     <!--模糊查询用户数量-->
     <select id="selectUserCountByKeyword" resultType="Integer">
         SELECT COUNT(*)
-        FROM sys_user
-        WHERE
-            <if test="type==1">
-                    type=0 AND
-            </if>
-            status = 1 AND username LIKE "%"#{keyword}"%";
+        FROM user
+       where phone LIKE "%"#{keyword}"%";
     </select>
     <!--查询管理员数量-->
     <select id="selectUserCountAdmin" resultType="Integer">

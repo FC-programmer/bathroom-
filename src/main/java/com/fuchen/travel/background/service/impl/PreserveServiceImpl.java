@@ -1,13 +1,9 @@
 package com.fuchen.travel.background.service.impl;
 
-import com.fuchen.travel.background.entity.Scenic;
-import com.fuchen.travel.background.entity.User;
+import com.fuchen.travel.background.entity.Preserve;
 import com.fuchen.travel.background.mapper.ScenicMapper;
-import com.fuchen.travel.background.mapper.UserMapper;
-import com.fuchen.travel.background.service.ScenicService;
+import com.fuchen.travel.background.service.PreserveService;
 import com.fuchen.travel.background.util.QCloudUtil;
-import com.fuchen.travel.background.util.RedisKeyUtil;
-import com.fuchen.travel.background.util.TravelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,7 +19,7 @@ import java.util.List;
  * 景点-service层-实现类
  */
 @Service
-public class ScenicServiceImpl implements ScenicService {
+public class PreserveServiceImpl implements PreserveService {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -72,9 +68,9 @@ public class ScenicServiceImpl implements ScenicService {
      * @return
      */
     @Override
-    public List<Scenic> findRecommendScenic() {
+    public List<Preserve> findRecommendScenic() {
 
-        List<Scenic> list = scenicMapper.selectRecommendScenic();
+        List<Preserve> list = scenicMapper.selectRecommendScenic();
         //将推荐的景点数量放入redis中
         redisTemplate.opsForValue().set("scenicRecommendCount", list.size());
 
@@ -159,19 +155,19 @@ public class ScenicServiceImpl implements ScenicService {
      * @return
      */
     @Override
-    public List<Scenic> getScenic(Integer offset, Integer limit) {
+    public List<Preserve> getScenic(Integer offset, Integer limit) {
         return scenicMapper.selectScenic(offset, limit);
     }
     @Override
-    public List<Scenic> getScenic1(Integer offset, Integer limit) {
+    public List<Preserve> getScenic1(Integer offset, Integer limit) {
         return scenicMapper.selectScenic1(offset, limit);
     }
     @Override
-    public List<Scenic> getScenic2(Integer offset, Integer limit) {
+    public List<Preserve> getScenic2(Integer offset, Integer limit) {
         return scenicMapper.selectScenic2(offset, limit);
     }
     @Override
-    public List<Scenic> getScenic3(Integer offset, Integer limit) {
+    public List<Preserve> getScenic3(Integer offset, Integer limit) {
         return scenicMapper.selectScenic3(offset, limit);
     }
 
@@ -228,39 +224,39 @@ public class ScenicServiceImpl implements ScenicService {
     @Override
     public Integer isScenicName(String scenicName) {
         //查询当前景点是否存在
-        Scenic scenic = scenicMapper.selectScenicExist(scenicName);
+        Preserve preserve = scenicMapper.selectScenicExist(scenicName);
         //存在说明scenic不为空，则将scenic的id返回，否则返回空
-        if(scenic != null) {
-            return scenic.getId();
+        if(preserve != null) {
+            return preserve.getId();
         }
         return null;
     }
 
     /**
      * 添加景点
-     * @param scenic 景点对象
+     * @param preserve 景点对象
      * @param scenicImg 景点图片
      * @param filename 景点图片名称
      * @param suffix 后缀
      */
     @Override
-    public void addScenic(Scenic scenic, MultipartFile scenicImg,  String filename, String suffix) {
+    public void addScenic(Preserve preserve, MultipartFile scenicImg, String filename, String suffix) {
 
         //上传腾讯云
         qCloudUtil.uploadFile(bucketName, filename, scenicImg , cosRegion, secretId, secretKey);
 
         //更新景点图片路径
         String scenicUrl = qCloudUrl + "/" +  filename ;
-        scenic.setImageUrl(scenicUrl);
-        scenic.setCreateTime(new Date());
+        //preserve.setImageUrl(scenicUrl);
+        //preserve.setCreateTime(new Date());
 
         //如果景点id为空说明已经不存在该景点，应该添加当前景点，否则为修改景点
-        if (scenic.getId() == null) {
+        if (preserve.getId() == null) {
             //添加景点信息
-            scenicMapper.insertScenic(scenic);
+            scenicMapper.insertScenic(preserve);
         } else {
             //修改景点信息
-            scenicMapper.updateScenic(scenic);
+            scenicMapper.updateScenic(preserve);
         }
         //清除redis中景点数量
         redisTemplate.delete("scenicCount");
@@ -296,13 +292,13 @@ public class ScenicServiceImpl implements ScenicService {
      * @return
      */
     @Override
-    public List<Scenic> getScenicSearch(String keyword, Integer offset, Integer limit) {
+    public List<Preserve> getScenicSearch(String keyword, Integer offset, Integer limit) {
         return scenicMapper.selectScenicByKeyword(keyword, offset, limit);
     }
 
     @Override
     public Integer updateAudit(Integer auditId, Integer audit) {
-        if (audit == 0) {
+        if (audit == 1) {
             audit ++;
         }
         return scenicMapper.updateAudit(auditId, audit);

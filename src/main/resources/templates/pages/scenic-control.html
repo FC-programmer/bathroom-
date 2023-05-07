@@ -251,7 +251,7 @@
                   <button type="button" onclick="isChecked()" class="btn btn-inverse-danger btn-icon me-3 mt-2 mt-xl-0" data-toggle="modal" data-target="#deleteScenicModal">
                     <i class="mdi mdi-delete-forever text-muted"></i>
                   </button>
-                  <form class="forms-sample" method="get"  th:action="@{/scenic/search}">
+                  <form class="forms-sample" method="get"  th:action="@{/preserve/search}">
                     <div class="input-group-prepend" style="width: 400px">
                       <div class="input-group" id="search1">
                         <i class="mdi mdi-magnify input-group-text" style="height: 40px;"></i>
@@ -287,23 +287,23 @@
                     </tr>
                     </thead>
                     <tbody id="checklist">
-                    <tr th:each="allScenic:${scenicList}">
+                    <tr th:each="allScenic:${preserveList}">
                       <th>
                         <div class="form-check" >
                           <label class="form-check-label">
-                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allScenic.scenic.id}">
+                            <input type="checkbox" name="select"  class="form-check-input" th:value="${allScenic.preserve.id}">
                             <!--<input type="hidden" >-->
                           </label>
                         </div>
                       </th>
-                      <td th:text="${allScenic.scenic.id}">
+                      <td th:text="${allScenic.preserve.id}">
                         1
                       </td>
-                      <td th:text="${allScenic.scenic.scenicName}">
+                      <td th:text="${allScenic.preserve.scenicName}">
                         故宫
                       </td>
                       <td>
-                        <img th:src="${allScenic.scenic.imageUrl}" class="rounded-0 rounded-lg" style="width: 180px;height: 100px">
+                        <img th:src="${allScenic.preserve.imageUrl}" class="rounded-0 rounded-lg" style="width: 180px;height: 100px">
                       </td>
                     </tr>
                     </tbody>
@@ -433,7 +433,7 @@
 
 <script th:src="@{/js/file-upload.js}"></script>
 
-<script th:src="@{/js/scenic-control.js}"></script>
+<script th:src="@{/js/preserve-control.js}"></script>
 
 
 

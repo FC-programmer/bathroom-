@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuchen.travel.background.mapper.ScenicMapper">
+    <!--插入景点信息-->
+    <insert id="insertScenic">
+        INSERT INTO
+            preserve (scenic_name, image_url, create_time, audit)
+        values (#{preserve.scenicName}, #{preserve.imageUrl},#{preserve.createTime}, 0);
+    </insert>
+    <!--推荐景点-->
+    <update id="recommend">
+        UPDATE preserve
+        SET 1 = 1
+        WHERE id = #{id};
+    </update>
+    <!--修改推荐景点状态-->
+    <update id="removeRecommend">
+        UPDATE preserve
+        SET 1 = 1
+        WHERE id = #{id}
+    </update>
+    <!--修改景点信息-->
+    <update id="updateScenic">
+        UPDATE preserve
+        SET scenic_name = #{preserve.scenicName},
+            introduce = #{preserve.introduce},
+            content = #{preserve.content},
+            image_url = #{preserve.imageUrl},
+            notice = #{preserve.notice},
+            price = #{preserve.price},
+            merchant = #{preserve.merchant},
+            phone = #{preserve.phone},
+            address = #{preserve.address},
+            create_time = #{preserve.createTime},
+            status = 0
+        WHERE id = #{preserve.id};
+    </update>
+    <update id="updateScenicById">
+        update preserve set status = 2
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updateAudit">
+        update preserve set content = #{audit} where id = #{id}
+    </update>
+
+    <!--查询推荐景点-->
+    <select id="selectRecommendScenic" resultType="Preserve">
+        SELECT *
+        FROM preserve
+        WHERE 1 = 1
+        ORDER BY id
+        Limit 0, 6;
+    </select>
+
+    <!--查询景点总数-->
+    <select id="selectScenicCount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM preserve
+        WHERE 1 = 1;
+    </select>
+    <!--查询景点总数-->
+    <select id="selectScenicCount1" resultType="Integer">
+        SELECT COUNT(*)
+        FROM preserve
+        WHERE 1 = 1;
+    </select>
+    <!--分页查询全部景点-->
+    <select id="selectScenic" resultType="Preserve">
+        SELECT *
+        FROM preserve
+        WHERE 1 = 1
+        ORDER BY id
+        LIMIT #{offset}, #{limit};
+    </select>
+    <!--分页查询全部景点-->
+    <select id="selectScenic1" resultType="Preserve">
+        SELECT *
+        FROM preserve
+        WHERE 1 = 1
+        ORDER BY id
+            LIMIT #{offset}, #{limit};
+    </select>
+    <!--分页查询全部景点-->
+    <select id="selectScenic2" resultType="Preserve">
+        SELECT *
+        FROM scenic_copy2
+        WHERE 1 = 1
+        ORDER BY id
+            LIMIT #{offset}, #{limit};
+    </select>
+    <!--分页查询全部景点-->
+    <select id="selectScenic3" resultType="Preserve">
+        SELECT *
+        FROM scenic_copy3
+        WHERE 1 = 1
+        ORDER BY id
+            LIMIT #{offset}, #{limit};
+    </select>
+    <!--查询指定景点是否存在-->
+    <select id="selectScenicExist" resultType="Preserve">
+        SELECT *
+        FROM preserve
+        WHERE scenic_name = #{scenicName} AND status != 2
+    </select>
+    <select id="selectScenicRecommendCount" resultType="Integer">
+        SELECT COUNT(*)
+        FROM preserve
+        WHERE type = 1;
+    </select>
+
+    <select id="selectCountByKeyword" resultType="Integer">
+        SELECT COUNT(*)
+        FROM preserve
+        WHERE phone LIKE "%"#{keyword}"%";
+    </select>
+    <select id="selectScenicByKeyword" resultType="Preserve">
+        SELECT *
+        FROM preserve
+        WHERE phone LIKE "%"#{keyword}"%";
+    </select>
+
+</mapper>

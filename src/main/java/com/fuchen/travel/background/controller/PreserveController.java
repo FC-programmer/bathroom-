@@ -1,24 +1,22 @@
 package com.fuchen.travel.background.controller;
 
 import com.fuchen.travel.background.entity.Page;
-import com.fuchen.travel.background.entity.Scenic;
-import com.fuchen.travel.background.entity.User;
-import com.fuchen.travel.background.service.ScenicService;
+import com.fuchen.travel.background.entity.Preserve;
+import com.fuchen.travel.background.service.PreserveService;
+import com.fuchen.travel.background.service.UserService;
 import com.fuchen.travel.background.util.TravelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,10 +28,13 @@ import java.util.*;
  */
 @Controller
 @Slf4j
-public class ScenicController {
+public class PreserveController {
 
     @Autowired
-    private ScenicService scenicService;
+    private PreserveService preserveService;
+
+    @Resource
+    private UserService userService;
 
     @Value("${scenic.path.image}")
     private String scenicImage;
@@ -47,19 +48,19 @@ public class ScenicController {
     @GetMapping("/scenic-control")
     public String scenicControl(Model model, Page page) {
         //获取景点数量
-        Integer scenicCount = scenicService.getScenicCount();
+        Integer scenicCount = preserveService.getScenicCount();
         //设置分页数据
         page.setLimit(5);
         page.setPath("/scenic-control");
         page.setRows(scenicCount);
         //获取景点集合
-        List<Scenic> scenic = scenicService.getScenic(page.getOffset(), page.getLimit());
+        List<Preserve> preserve = preserveService.getScenic(page.getOffset(), page.getLimit());
         //用户存放景点数据
-        List<Map<String, Scenic>> scenicList = new ArrayList<>(scenicCount);
+        List<Map<String, Preserve>> scenicList = new ArrayList<>(scenicCount);
         //遍历景点集合，将其通过map放入list中
-        for (int i = 0; i < scenic.size(); i++) {
-            Map<String, Scenic> map = new HashMap<>();
-            map.put("scenic", scenic.get(i));
+        for (int i = 0; i < preserve.size(); i++) {
+            Map<String, Preserve> map = new HashMap<>();
+            map.put("scenic", preserve.get(i));
             scenicList.add(map);
         }
 
@@ -74,35 +75,36 @@ public class ScenicController {
      * @return
      */
     @GetMapping("/scenic-controll")
-    public String scenicControl1(Model model, Page page) {
+    public String scenicControl1(Model model, Page page, HttpServletRequest request) {
         //获取景点数量
-        Integer scenicCount = scenicService.getScenicCount1();
+        Integer scenicCount = preserveService.getScenicCount1();
         //设置分页数据
         page.setLimit(5);
         page.setPath("/scenic-controll");
         page.setRows(scenicCount);
         //获取景点集合
-        List<Scenic> scenic = scenicService.getScenic1(page.getOffset(), page.getLimit());
-        log.info(scenic.toString());
+        List<Preserve> preserve = preserveService.getScenic1(page.getOffset(), page.getLimit());
+        log.info(preserve.toString());
         //用户存放景点数据
-        List<Map<String, Scenic>> scenicList = new ArrayList<>(scenicCount);
+        List<Map<String, Preserve>> scenicList = new ArrayList<>(scenicCount);
         //遍历景点集合，将其通过map放入list中
-        for (int i = 0; i < scenic.size(); i++) {
-            Map<String, Scenic> map = new HashMap<>();
-            map.put("scenic", scenic.get(i));
+        for (int i = 0; i < preserve.size(); i++) {
+            Map<String, Preserve> map = new HashMap<>();
+            map.put("preserve", preserve.get(i));
             scenicList.add(map);
         }
 
-        model.addAttribute("scenicList1", scenicList);
+
+        model.addAttribute("preserveList", scenicList);
+        model.addAttribute("loginUser", userService.getLoginUser(request));
 
         return "/pages/scenic-controll";
     }
 
     @PostMapping("/audit")
-    @ResponseBody
-    public String updateAudit(Integer audit, Integer auditId) {
-        scenicService.updateAudit(auditId, audit);
-        return TravelUtil.getJsonString(0);
+    public String updateAudit(Integer audit, Integer auditId, HttpServletRequest request) {
+        preserveService.updateAudit(auditId, audit);
+        return "redirect:/scenic-controll";
     }
 
     /**
@@ -114,19 +116,19 @@ public class ScenicController {
     @GetMapping("/scenic-controlll")
     public String scenicControl2(Model model, Page page) {
         //获取景点数量
-        Integer scenicCount = scenicService.getScenicCount2();
+        Integer scenicCount = preserveService.getScenicCount2();
         //设置分页数据
         page.setLimit(5);
         page.setPath("/scenic-controlll");
         page.setRows(scenicCount);
         //获取景点集合
-        List<Scenic> scenic = scenicService.getScenic2(page.getOffset(), page.getLimit());
+        List<Preserve> preserve = preserveService.getScenic2(page.getOffset(), page.getLimit());
         //用户存放景点数据
-        List<Map<String, Scenic>> scenicList = new ArrayList<>(scenicCount);
+        List<Map<String, Preserve>> scenicList = new ArrayList<>(scenicCount);
         //遍历景点集合，将其通过map放入list中
-        for (int i = 0; i < scenic.size(); i++) {
-            Map<String, Scenic> map = new HashMap<>();
-            map.put("scenic", scenic.get(i));
+        for (int i = 0; i < preserve.size(); i++) {
+            Map<String, Preserve> map = new HashMap<>();
+            map.put("scenic", preserve.get(i));
             scenicList.add(map);
         }
 
@@ -143,19 +145,19 @@ public class ScenicController {
     @GetMapping("/scenic-controllll")
     public String scenicControl3(Model model, Page page) {
         //获取景点数量
-        Integer scenicCount = scenicService.getScenicCount3();
+        Integer scenicCount = preserveService.getScenicCount3();
         //设置分页数据
         page.setLimit(5);
         page.setPath("/scenic-controlll");
         page.setRows(scenicCount);
         //获取景点集合
-        List<Scenic> scenic = scenicService.getScenic3(page.getOffset(), page.getLimit());
+        List<Preserve> preserve = preserveService.getScenic3(page.getOffset(), page.getLimit());
         //用户存放景点数据
-        List<Map<String, Scenic>> scenicList = new ArrayList<>(scenicCount);
+        List<Map<String, Preserve>> scenicList = new ArrayList<>(scenicCount);
         //遍历景点集合，将其通过map放入list中
-        for (int i = 0; i < scenic.size(); i++) {
-            Map<String, Scenic> map = new HashMap<>();
-            map.put("scenic", scenic.get(i));
+        for (int i = 0; i < preserve.size(); i++) {
+            Map<String, Preserve> map = new HashMap<>();
+            map.put("scenic", preserve.get(i));
             scenicList.add(map);
         }
 
@@ -200,7 +202,7 @@ public class ScenicController {
     @PostMapping("/recommend")
     public String recommendScenic(String recommendScenic, Model model) {
         //判断推荐景点数量是否已满
-        if (scenicService.getScenicRecommendCount() == 6) {
+        if (preserveService.getScenicRecommendCount() == 6) {
             model.addAttribute("recommendCountMsg", "推荐景点已满！");
             return "/index";
         }
@@ -211,14 +213,14 @@ public class ScenicController {
             return null;
         }
         //推荐景点
-        scenicService.recommend(recommendScenic);
+        preserveService.recommend(recommendScenic);
         return "redirect:/index";
     }
 
     @PostMapping("/removeRecommend")
     public String removeRecommendScenic(String removeRecommend, Model model){
         //判断推荐景点数量是否已满
-        if (scenicService.getScenicRecommendCount() == 0) {
+        if (preserveService.getScenicRecommendCount() == 0) {
             model.addAttribute("recommendCountMsg", "推荐景点不足！");
             return "/index";
         }
@@ -228,7 +230,7 @@ public class ScenicController {
             model.addAttribute("removeRecommendMsg", "请填写景点id");
         }
         //移出推荐景点
-        scenicService.removeRecommend(removeRecommend);
+        preserveService.removeRecommend(removeRecommend);
         return "redirect:/index";
     }
 
@@ -242,8 +244,8 @@ public class ScenicController {
     @PostMapping("/addScenic")
     public String addScenic(String scenicName, MultipartFile scenicImg, Model model){
 
-        Scenic scenic = new Scenic();
-        scenic.setScenicName(scenicName);
+        Preserve preserve = new Preserve();
+        //preserve.setScenicName(scenicName);
 
         //判断文件后缀
         String filename = scenicImg.getOriginalFilename();
@@ -254,7 +256,7 @@ public class ScenicController {
             return "/site/setting";
         }
         //添加景点
-        scenicService.addScenic(scenic, scenicImg, filename, suffix);
+        preserveService.addScenic(preserve, scenicImg, filename, suffix);
 
         return "redirect:/scenic-controll";
     }
@@ -272,12 +274,12 @@ public class ScenicController {
             TravelUtil.getJsonString(1,"未选择景点！");
         }
         //删除景点信息
-        scenicService.removeScenic(list);
+        preserveService.removeScenic(list);
         return TravelUtil.getJsonString(0,"景点删除成功！");
     }
 
     @GetMapping("/scenic/search")
-    public String searchUser(String keyword, Model model, Page page){
+    public String searchUser(String keyword, Model model, Page page, HttpServletRequest request){
         //判断关键字是否为空
         if (keyword.isEmpty()) {
             model.addAttribute("searchMsg", "请输入搜素内容！");
@@ -285,25 +287,26 @@ public class ScenicController {
         }
 
         //获取用户数量
-        Integer scenicCount = scenicService.getScenicCountSearch(keyword);
+        Integer scenicCount = preserveService.getScenicCountSearch(keyword);
 
         //设置分页数据
         page.setLimit(5);
         page.setPath("/scenic/search?keyword=" + keyword);
         page.setRows(scenicCount);
         //分页查询用户集合
-        List<Scenic> scenic = scenicService.getScenicSearch(keyword, page.getOffset(), page.getLimit());
+        List<Preserve> preserve = preserveService.getScenicSearch(keyword, page.getOffset(), page.getLimit());
         //创建景点集合存放景点数据
-        List<Map<String, Scenic>> scenicList = new ArrayList<>(scenicCount);
+        List<Map<String, Preserve>> scenicList = new ArrayList<>(scenicCount);
         //遍历景点集合，将其通过map放入list中
-        for (int i = 0; i < scenic.size(); i++) {
-            Map<String, Scenic> map = new HashMap<>();
-            map.put("scenic", scenic.get(i));
+        for (int i = 0; i < preserve.size(); i++) {
+            Map<String, Preserve> map = new HashMap<>();
+            map.put("preserve", preserve.get(i));
             scenicList.add(map);
         }
 
-        model.addAttribute("scenicList", scenicList);
+        model.addAttribute("preserveList", scenicList);
+        model.addAttribute("loginUser", userService.getLoginUser(request));
 
-        return "/pages/scenic-control";
+        return "/pages/scenic-controll";
     }
 }
